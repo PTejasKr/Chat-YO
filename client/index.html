@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>CHATYO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Inter:wght@100;300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --apple-ease: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html, body, #root {
+            height: 100vh;
+            height: -webkit-fill-available; /* For iOS Safari compatibility */
+            overflow: hidden;
+        }
+        body {
+            background-color: #000000;
+            color: #FFFFFF;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Premium Scrollbar */
+        ::-webkit-scrollbar {
+            width: 0px;
+        }
+
+        /* Glass Transitions */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Spring Animations */
+        @keyframes scaleIn {
+            0% { transform: scale(0.96); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-premium-in {
+            animation: scaleIn 0.5s var(--apple-ease) forwards;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        .scan-line {
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.05), transparent);
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            animation: scan 4s linear infinite;
+            pointer-events: none;
+        }
+
+        /* Input Overrides */
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+        
+        button {
+            transition: all 0.3s var(--apple-ease);
+        }
+
+        /* Glitch Animation */
+        .glitch-wrapper {
+            position: relative;
+        }
+        .glitch {
+            position: relative;
+            color: white;
+            z-index: 1;
+        }
+        .glitch:before,
+        .glitch:after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            overflow: hidden;
+        }
+        .glitch:before {
+            left: 2px;
+            text-shadow: -2px 0 #A1A7B2;
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
+        }
+        .glitch:after {
+            left: -2px;
+            text-shadow: -2px 0 #00FF47, 2px 2px #A1A7B2;
+            animation: glitch-anim-2 2s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim-1 {
+            0% { clip-path: inset(15% 0 86% 0); }
+            20% { clip-path: inset(8% 0 3% 0); }
+            40% { clip-path: inset(45% 0 55% 0); }
+            60% { clip-path: inset(90% 0 1% 0); }
+            80% { clip-path: inset(30% 0 70% 0); }
+            100% { clip-path: inset(5% 0 92% 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip-path: inset(80% 0 3% 0); }
+            20% { clip-path: inset(5% 0 95% 0); }
+            40% { clip-path: inset(66% 0 33% 0); }
+            60% { clip-path: inset(21% 0 78% 0); }
+            80% { clip-path: inset(40% 0 50% 0); }
+            100% { clip-path: inset(95% 0 4% 0); }
+        }
+
+        /* Flip Clock Animation */
+        .flip-card {
+            display: inline-flex;
+            position: relative;
+            flex-direction: column;
+            --flip-duration: 0.6s;
+        }
+        .digit-card {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #0A0A0A;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: #A1A7B2;
+            text-shadow: 0 0 5px rgba(161, 167, 178, 0.4);
+            border-radius: 0.2em;
+        }
+        .digit-card-top, .digit-card-bottom {
+            position: absolute;
+            width: 100%;
+            height: 50%;
+            left: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .digit-card-top {
+            top: 0;
+            border-radius: 0.2em 0.2em 0 0;
+            align-items: flex-end;
+            padding-bottom: 0.05em;
+        }
+        .digit-card-bottom {
+            bottom: 0;
+            border-radius: 0 0 0.2em 0.2em;
+            align-items: flex-start;
+            padding-top: 0.05em;
+        }
+        .flipper {
+            position: absolute;
+            z-index: 2;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            transform-style: preserve-3d;
+            transform-origin: bottom center;
+        }
+        .flipper.flipping {
+            animation: flip-down var(--flip-duration) ease-in-out;
+        }
+        .flipper-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            overflow: hidden;
+            padding-bottom: 0.05em;
+            background-color: #111214;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #caced5;
+            text-shadow: 0 0 5px rgba(161, 167, 178, 0.6);
+            border-radius: 0.2em 0.2em 0 0;
+        }
+        .flipper-back {
+            transform: rotateX(180deg);
+        }
+        @keyframes flip-down {
+            from { transform: rotateX(0deg); }
+            to { transform: rotateX(-180deg); }
+        }
+
+        /* Invite Timer Animation */
+        @keyframes shrink-width {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+        .animate-shrink-width {
+            animation: shrink-width 30s linear forwards;
+        }
+
+        /* Entrance Screen Particle BG */
+        @keyframes move-particles-slow {
+          100% { background-position: -200px 200px; }
+        }
+        @keyframes move-particles-medium {
+          100% { background-position: 400px -400px; }
+        }
+        @keyframes move-particles-fast {
+          100% { background-position: -600px 600px; }
+        }
+        @keyframes fade-in-bg {
+          to { opacity: 0.8; }
+        }
+        .particle-bg {
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+          background-image: 
+            radial-gradient(circle, rgba(161, 167, 178, 0.06) 1px, transparent 1px),
+            radial-gradient(circle, rgba(161, 167, 178, 0.07) 1px, transparent 1px),
+            radial-gradient(circle, rgba(161, 167, 178, 0.08) 1px, transparent 1px);
+          background-size: 300px 300px, 200px 200px, 100px 100px;
+          background-position: 0 0, 0 0, 0 0;
+          background-repeat: repeat;
+          opacity: 0;
+          animation: 
+            move-particles-slow 200s linear infinite,
+            move-particles-medium 150s linear infinite,
+            move-particles-fast 100s linear infinite,
+            fade-in-bg 3s 1s ease-out forwards;
+        }
+
+        /* Critical Timer Pulse */
+        @keyframes pulse-timer {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 0 rgba(255, 59, 48, 0));
+            }
+            50% {
+                transform: scale(1.02);
+                filter: drop-shadow(0 0 10px rgba(255, 59, 48, 0.6));
+            }
+        }
+        .animate-pulse-timer {
+            animation: pulse-timer 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Recording Glow Animation */
+        @keyframes recording-glow-pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(161, 167, 178, 0); }
+            50% { box-shadow: 0 0 20px 5px rgba(161, 167, 178, 0.4); }
+        }
+        .recording-glow {
+            animation: recording-glow-pulse 2s infinite;
+            border-color: rgba(161, 167, 178, 0.5) !important;
+        }
+
+        /* Engaging Progress Bar Animation */
+        .progress-bar-animated {
+            position: relative;
+        }
+        .progress-bar-animated::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: progress-shimmer 2s infinite linear;
+        }
+        @keyframes progress-shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.35.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>

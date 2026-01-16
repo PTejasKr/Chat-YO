@@ -1,0 +1,9 @@
+{
+  "name": "CHATYO - Zero Trace Gateway",
+  "description": "An ephemeral, stealth messaging application featuring a calculator gateway, proximity scanning, and self-destructing identity protocols.",
+  "requestFramePermissions": [
+    "geolocation",
+    "microphone",
+    "camera"
+  ]
+}
